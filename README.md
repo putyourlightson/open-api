@@ -1,2 +1,2 @@
-open-api
+Open API Placeholder
 ========
