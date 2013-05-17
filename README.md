@@ -1,3 +1,5 @@
-Open API Placeholder
+ExpressionEngine Open API
 ========
-Check back on the 17th May 2013 at 14:00 GMT
+First released at EEUK 2013
+
+Doumentation at http://docs.eeopenapi.apiary.io/
