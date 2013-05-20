@@ -1,6 +1,6 @@
 ExpressionEngine Open API
 ========
-Announced in my presentation at EEUK 2013: https://speakerdeck.com/putyourlightson/eeuk-2013-expressionengines-missing-api
+Announced in my presentation at EEUK 2013: http://www.putyourlightson.net/news/eeuk-2013-presentation
 
 Open API is a front-end API for ExpressionEngine that provides authentication and CRUD functionality to the content and data in the CMS.
 
