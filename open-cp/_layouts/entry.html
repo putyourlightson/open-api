@@ -1,0 +1,66 @@
+      <form class="update_entry form-horizontal">
+        <input type="hidden" name="channel_id" value="1" />
+        <input type="hidden" name="entry_id" value="" />
+        <fieldset>
+          <legend><a class="entries" href="#">Articles</a> > <span id="title">Create Article</span></legend>
+          <div class="control-group">
+            <label class="control-label">Title</label>
+            <div class="controls">
+              <input type="text" name="title" value="" />
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">URL Title</label>
+            <div class="controls">
+              <input type="text" name="url_title" value="" />
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Date</label>
+            <div class="controls">
+              <input type="text" name="entry_date" value="" />
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Status</label>
+            <div class="controls">
+              <select name="status">
+                <option value="open">open</option>
+                <option value="draft">draft</option>
+                <option value="closed">closed</option>
+              </select>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Summary</label>
+            <div class="controls">
+              <textarea name="summary"></textarea>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Body</label>
+            <div class="controls">
+              <textarea name="more"></textarea>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-success">Save</button> or <a class="cancel" href="#">Back to Articles</a>
+            </div>
+          </div>
+          <div class="control-group" style="display: none;">
+            <div class="controls">
+              <div class="alert alert-success">
+                <strong>Success</strong> Article saved <span>0</span> seconds ago
+              </div>
+            </div>
+          </div>
+          <div class="control-group" style="display: none;">
+            <div class="controls">
+              <div class="alert alert-error">
+                <strong>Error</strong> <span class="error_text"></span>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>

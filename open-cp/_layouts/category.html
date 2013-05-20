@@ -1,0 +1,38 @@
+      <form class="update_category form-horizontal">
+        <input type="hidden" name="group_id" value="2" />
+        <input type="hidden" name="cat_id" value="" />
+        <fieldset>
+          <legend><a class="categories" href="#">Categories</a> > <span id="title">Create Category</span></legend>
+          <div class="control-group">
+            <label class="control-label">Category Name</label>
+            <div class="controls">
+              <input type="text" name="cat_name" value="" />
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Category URL Title</label>
+            <div class="controls">
+              <input type="text" name="cat_url_title" value="" />
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-success">Submit</button> or <a class="categories" href="#">Back to Categories</a>
+            </div>
+          </div>
+          <div class="control-group" style="display: none;">
+            <div class="controls">
+              <div class="alert alert-success">
+                <strong>Success</strong> Category saved <span>0</span> seconds ago
+              </div>
+            </div>
+          </div>
+          <div class="control-group" style="display: none;">
+            <div class="controls">
+              <div class="alert alert-error">
+                <strong>Error</strong> <span class="error_text"></span>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>

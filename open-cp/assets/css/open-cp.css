@@ -1,0 +1,140 @@
+body {
+  padding: 10px 10px 20px !important;
+}
+
+body.logo .home a {
+  display: block;
+  text-indent: -10000px;
+  margin-top: -10px;
+  width: 192px;
+  height: 120px;
+  background: url(../img/logo.png) no-repeat;
+}
+
+body.water {
+  background: #EDF8FD;
+}
+
+body.members ul.nav li:last-child {
+  display: none;
+}
+
+select.variations {
+  float: right;
+}
+
+table i {
+  opacity: 0.4;
+}
+
+table i:hover {
+  opacity: 1;
+}
+
+
+/* Custom container */
+.container {
+  margin: 0 auto;
+  max-width: 1000px;
+}
+.container > hr {
+  margin: 60px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  margin: 80px 0;
+  text-align: center;
+}
+.jumbotron h1 {
+  font-size: 100px;
+  line-height: 1;
+}
+.jumbotron .lead {
+  font-size: 24px;
+  line-height: 1.25;
+}
+.jumbotron .btn {
+  font-size: 21px;
+  padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing {
+  margin: 60px 0;
+}
+.marketing p + h4 {
+  margin-top: 28px;
+}
+
+
+/* Customize the navbar links to be fill the entire space of the .navbar */
+.navbar {
+  clear: both;
+}
+.navbar .navbar-inner {
+  padding: 0;
+}
+.navbar .nav {
+  margin: 0;
+  display: table;
+  width: 100%;
+}
+.navbar .nav li {
+  display: table-cell;
+  width: 1%;
+  float: none;
+}
+.navbar .nav li a {
+  font-weight: bold;
+  text-align: center;
+  border-left: 1px solid rgba(255,255,255,.75);
+  border-right: 1px solid rgba(0,0,0,.1);
+}
+.navbar .nav li:first-child a {
+  border-left: 0;
+  border-radius: 3px 0 0 3px;
+}
+.navbar .nav li:last-child a {
+  border-right: 0;
+  border-radius: 0 3px 3px 0;
+}
+
+.row-fluid .span4 {
+  margin-bottom: 20px;
+}
+.row-fluid [class*="span"]:nth-child(3n+1) {
+  margin-left: 0;
+}
+
+input, textarea, .uneditable-input {
+  width: 100%;
+}
+
+form .control-group {
+  width: 80%;
+}
+
+@media (max-width: 979px) {
+  form .control-group {
+    width: 90%;
+  }
+  .jumbotron {
+    margin-top: 50px;
+  }
+  h1 span {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .home a, .variations {
+    display: none;
+  }
+  .navbar {
+    padding-top: 10px;
+  }
+  table th.icons, table td.icons {
+    display: none;
+  }
+}
