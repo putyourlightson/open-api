@@ -5,7 +5,7 @@
  *
  * @package			Open API
  * @category		Libraries
- * @description		Open API
+ * @description		Front-end API with authentication and CRUD functionality
  * @author			Ben Croker
  * @link			http://www.putyourlightson.net/open-api/
  */
@@ -55,13 +55,12 @@ class Open_api_lib
 		// get variables
 		$vars = $this->_get_vars('post', array('username', 'password'));
 
-
 		// get member id
 		$query = $this->EE->db->get_where('members', array('username' => $vars['username']));
 
 		if (!$row = $query->row())
 		{
-			$this->response('Authentication failed x', 401);
+			$this->response('Authentication failed', 401);
 		}
 		
 		$member_id = $row->member_id;
@@ -78,7 +77,6 @@ class Open_api_lib
 	{
 		// get variables
 		$vars = $this->_get_vars('post', array('email', 'password'));
-
 
 		// get member id
 		$query = $this->EE->db->get_where('members', array('email' => $vars['email']));
@@ -122,6 +120,9 @@ class Open_api_lib
 		// get variables
 		$vars = $this->_get_vars('get', array('channel_id'));
 
+		// start hook
+		$vars = $this->_hook('get_channel_start', $vars);
+
 		// validate id
 		$this->_validate_id($vars['channel_id']);
 
@@ -129,6 +130,9 @@ class Open_api_lib
 		$this->_load_library('channel_data');
 		
 		$data = $this->EE->channel_data_lib->get_channel($vars['channel_id'])->result();
+
+		// end hook
+		$data = $this->_hook('get_channel_end', $data);
 
 		$this->response($data);
 	}
@@ -140,10 +144,16 @@ class Open_api_lib
 	 */
 	function get_channels()
 	{
+		// start hook
+		$vars = $this->_hook('get_channels_start', array());
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_channels()->result();
+
+		// end hook
+		$data = $this->_hook('get_channels_end', $data);
 
 		$this->response($data);
 	}
@@ -244,10 +254,16 @@ class Open_api_lib
 		// get variables
 		$vars = $this->_get_vars('get', array('entry_id'));
 		
+		// start hook
+		$vars = $this->_hook('get_channel_entry_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_channel_entry($vars['entry_id'])->result();
+
+		// end hook
+		$data = $this->_hook('get_channel_entry_end', $data);
 
 		$this->response($data);
 	}
@@ -273,10 +289,16 @@ class Open_api_lib
 		// prepare variables for sql
 		$vars = $this->_prepare_sql($vars, array('entry_id', 'channel_id'), 'channel_data');
 
+		// start hook
+		$vars = $this->_hook('get_channel_entries_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_channel_entries($vars['channel_id'], $vars['select'], $vars['where'], $vars['order_by'], $vars['sort'], $vars['limit'], $vars['offset'])->result();
+
+		// end hook
+		$data = $this->_hook('get_channel_entries_end', $data);
 
 		$this->response($data);
 	}
@@ -389,10 +411,16 @@ class Open_api_lib
 		// get variables
 		$vars = $this->_get_vars('get', array('cat_id'));
 		
+		// start hook
+		$vars = $this->_hook('get_category_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_category($vars['cat_id'])->result();
+
+		// end hook
+		$data = $this->_hook('get_category_end', $data);
 
 		$this->response($data);
 	}
@@ -416,10 +444,16 @@ class Open_api_lib
 		// prepare variables for sql
 		$vars = $this->_prepare_sql($vars);
 
+		// start hook
+		$vars = $this->_hook('get_categories_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_categories($vars['select'], $vars['where'], $vars['order_by'], $vars['sort'], $vars['limit'], $vars['offset'])->result();
+
+		// end hook
+		$data = $this->_hook('get_categories_end', $data);
 
 		$this->response($data);
 	}
@@ -434,10 +468,16 @@ class Open_api_lib
 		// get variables
 		$vars = $this->_get_vars('get', array('group_id'));
 
+		// start hook
+		$vars = $this->_hook('get_categories_by_group_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_category_by_group($vars['group_id'])->result();
+
+		// end hook
+		$data = $this->_hook('get_categories_by_group_end', $data);
 
 		$this->response($data);
 	}
@@ -462,10 +502,16 @@ class Open_api_lib
 		// prepare variables for sql
 		$vars = $this->_prepare_sql($vars);
 		
+		// start hook
+		$vars = $this->_hook('get_categories_by_channel_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_channel_categories($vars['channel_id'], $vars['select'], $vars['where'], $vars['order_by'], $vars['sort'], $vars['limit'], $vars['offset'])->result();
+
+		// end hook
+		$data = $this->_hook('get_categories_by_channel_end', $data);
 
 		$this->response($data);
 	}
@@ -572,10 +618,16 @@ class Open_api_lib
 		// get variables
 		$vars = $this->_get_vars('get', array('group_id'));
 		
+		// start hook
+		$vars = $this->_hook('get_category_group_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_category_group($vars['group_id'])->result();
+
+		// end hook
+		$data = $this->_hook('get_category_group_end', $data);
 
 		$this->response($data);
 	}
@@ -599,10 +651,16 @@ class Open_api_lib
 		// prepare variables for sql
 		$vars = $this->_prepare_sql($vars);
 
+		// start hook
+		$vars = $this->_hook('get_category_groups_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_category_groups($vars['select'], $vars['where'], $vars['order_by'], $vars['sort'], $vars['limit'], $vars['offset'])->result();
+
+		// end hook
+		$data = $this->_hook('get_category_groups_end', $data);
 
 		$this->response($data);
 	}
@@ -651,10 +709,16 @@ class Open_api_lib
 		// get variables
 		$vars = $this->_get_vars('get', array('member_id'));
 		
+		// start hook
+		$vars = $this->_hook('get_member_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_member($vars['member_id'])->result();
+
+		// end hook
+		$data = $this->_hook('get_member_end', $data);
 
 		$this->response($data);
 	}
@@ -678,10 +742,16 @@ class Open_api_lib
 		// prepare variables for sql
 		$vars = $this->_prepare_sql($vars, array('member_id'), 'members');
 
+		// start hook
+		$vars = $this->_hook('get_members_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_members($vars['select'], $vars['where'], $vars['order_by'], $vars['sort'], $vars['limit'], $vars['offset'])->result();
+
+		// end hook
+		$data = $this->_hook('get_members_end', $data);
 
 		$this->response($data);
 	}
@@ -703,10 +773,16 @@ class Open_api_lib
 		// prepare variables for sql
 		$vars = $this->_prepare_sql($vars);
 
+		// start hook
+		$vars = $this->_hook('get_member_group_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_member_group($vars['group_id'], $vars['select'])->result();
+
+		// end hook
+		$data = $this->_hook('get_member_group_end', $data);
 
 		$this->response($data);
 	}
@@ -728,10 +804,16 @@ class Open_api_lib
 		// prepare variables for sql
 		$vars = $this->_prepare_sql($vars);
 
+		// start hook
+		$vars = $this->_hook('get_member_groups_start', $vars);
+
 		// load channel data library
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_member_groups($vars['select'], $vars['where'], $vars['order_by'], $vars['sort'], $vars['limit'], $vars['offset'])->result();
+
+		// end hook
+		$data = $this->_hook('get_member_groups_end', $data);
 
 		$this->response($data);
 	}
@@ -817,6 +899,9 @@ class Open_api_lib
 	 */
 	private function _authenticate_member($member_id, $password)
 	{
+		// start hook
+		$member_id = $this->_hook('authenticate_member_start', $member_id);
+
 		// load auth library
 		$this->EE->load->library('auth');
 		
@@ -827,6 +912,9 @@ class Open_api_lib
 		{
 			$this->response('Authentication failed', 401);
 		}
+
+		// success hook
+		$this->_hook('authenticate_success', $member_id);
 
 		// create a new session id
 		$session_id = $this->EE->session->create_new_session($member_id);
@@ -1120,6 +1208,22 @@ class Open_api_lib
 		}
 
 		return $vars;
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Hook - allows each method to check for relevant hooks
+	 */
+	private function _hook($hook='', $data=array())
+	{
+		if ($hook AND $this->EE->extensions->active_hook('open_api_'.$hook) === TRUE)
+		{
+			$data = $this->EE->extensions->call('open_api_'.$hook, $data);
+			if ($this->EE->extensions->end_script === TRUE) return;
+		}
+		
+		return $data;
 	}
 
 }
