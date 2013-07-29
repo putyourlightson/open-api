@@ -960,7 +960,14 @@ if(!class_exists('Channel_data_lib'))
 			if($cat_id)
 			{
 				$this->EE->db->join('exp_category_posts', 'exp_category_posts.entry_id = channel_titles.entry_id');
-				$this->EE->db->where('exp_category_posts.cat_id = '.$cat_id);
+				if(is_numeric($cat_id))
+				{
+					$this->EE->db->where('exp_category_posts.cat_id = '.$cat_id);
+				}
+				else
+				{
+					$this->EE->db->where_in('exp_category_posts.cat_id', explode('|', $cat_id));
+				}
 			}
 
 			// Converts the params into active record methods
