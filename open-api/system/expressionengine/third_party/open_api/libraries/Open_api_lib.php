@@ -283,7 +283,8 @@ class Open_api_lib
 			'order_by' => 'entry_date',
 			'sort' => 'desc',
 			'limit' => FALSE,
-			'offset' => 0
+			'offset' => 0,
+			'cat_id' => FALSE
 		));
 
 		// prepare variables for sql
@@ -295,7 +296,7 @@ class Open_api_lib
 		// load channel data library
 		$this->_load_library('channel_data');
 
-		$data = $this->EE->channel_data_lib->get_channel_entries($vars['channel_id'], $vars['select'], $vars['where'], $vars['order_by'], $vars['sort'], $vars['limit'], $vars['offset'])->result();
+		$data = $this->EE->channel_data_lib->get_channel_entries($vars['channel_id'], $vars['select'], $vars['where'], $vars['order_by'], $vars['sort'], $vars['limit'], $vars['offset'], $vars['cat_id'])->result();
 
 		// end hook
 		$data = $this->_hook('get_channel_entries_end', $data);

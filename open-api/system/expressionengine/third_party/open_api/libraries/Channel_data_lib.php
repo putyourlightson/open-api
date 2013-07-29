@@ -838,7 +838,7 @@ if(!class_exists('Channel_data_lib'))
 		 * @param	mixed
 		 * @return	object
 		 */
-		public function get_channel_entries($channel_id, $select = array(), $where = array(), $order_by = 'channel_titles.channel_id', $sort = 'DESC', $limit = FALSE, $offset = 0, $debug = FALSE)
+		public function get_channel_entries($channel_id, $select = array(), $where = array(), $order_by = 'channel_titles.channel_id', $sort = 'DESC', $limit = FALSE, $offset = 0, $cat_id = FALSE, $debug = FALSE)
 		{
 
 			$default_select = array('channel_data.entry_id', 'channel_data.channel_id', 'channel_titles.author_id', 'channel_titles.title', 'channel_titles.url_title', 'channel_titles.entry_date', 'channel_titles.expiration_date', 'status');
@@ -954,6 +954,13 @@ if(!class_exists('Channel_data_lib'))
 				{
 					$params[$keyword] = $$keyword;
 				}
+			}
+
+			// If a cat_id was passed then filter by category
+			if($cat_id)
+			{
+				$this->EE->db->join('exp_category_posts', 'exp_category_posts.entry_id = channel_titles.entry_id');
+				$this->EE->db->where('exp_category_posts.cat_id = '.$cat_id);
 			}
 
 			// Converts the params into active record methods
