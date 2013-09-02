@@ -26,17 +26,6 @@ class Open_api_lib
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Set Session
-	 */
-	function set_session($session)
-	{	
-		// save the EE session
-		$this->session = $session;
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
 	 * Call Method
 	 */
 	function call_method($method='')
@@ -928,7 +917,7 @@ class Open_api_lib
 		$this->_hook('authenticate_member_success', $member_id);
 
 		// create a new session id
-		$session_id = $this->session->create_new_session($member_id);
+		$session_id = $this->EE->session->create_new_session($member_id);
 
 		// get member details
 		$query = $this->EE->db->get_where('members', array('member_id' => $member_id));
@@ -1016,7 +1005,7 @@ class Open_api_lib
 		$userdata = array_merge($userdata, $query->row_array());
 
 		// set session userdata
-		$this->session->userdata = $userdata;
+		$this->EE->session->userdata = $userdata;
 	}
 
 	// --------------------------------------------------------------------
@@ -1026,7 +1015,7 @@ class Open_api_lib
 	 */
 	private function _check_permission($type, $var_name, $value)
 	{
-		$group_id = $this->session->userdata['group_id'];
+		$group_id = $this->EE->session->userdata['group_id'];
 
 		// if super admin then return
 		if ($group_id == 1)
@@ -1037,7 +1026,7 @@ class Open_api_lib
 		if ($type == 'channel_entry')
 		{
 			// get assigned channels
-			$assigned_channels = $this->session->userdata['assigned_channels'];
+			$assigned_channels = $this->EE->session->userdata['assigned_channels'];
 
 			// get channel id
 			$channel_id = $value;

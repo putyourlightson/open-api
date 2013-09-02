@@ -50,10 +50,10 @@ class Open_api_ext
 			$this->EE->load->library('open_api_lib');
 
 			// set the session
-			$this->EE->open_api_lib->set_session($session);
+			$this->EE->session = $session;
 			
 			// call the method in the second segment
-			$this->EE->open_api_lib->call_method($this->EE->uri->segment(2), $session);
+			$this->EE->open_api_lib->call_method($this->EE->uri->segment(2));
 
 			// stop any further processing
 			die();
