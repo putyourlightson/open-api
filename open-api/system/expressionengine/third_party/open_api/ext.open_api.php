@@ -42,15 +42,18 @@ class Open_api_ext
 	/**
 	 * Route URL
 	 */
-	function route_url($sess)
+	function route_url($session)
 	{	
 		if (isset($this->settings['api_trigger']) AND $this->settings['api_trigger'] AND $this->EE->uri->segment(1) == $this->settings['api_trigger'])
 		{
 			// load library
 			$this->EE->load->library('open_api_lib');
 
+			// set the session
+			$this->EE->open_api_lib->set_session($session);
+			
 			// call the method in the second segment
-			$this->EE->open_api_lib->call_method($this->EE->uri->segment(2));
+			$this->EE->open_api_lib->call_method($this->EE->uri->segment(2), $session);
 
 			// stop any further processing
 			die();
