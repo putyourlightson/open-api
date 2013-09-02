@@ -46,6 +46,9 @@ class Open_api_ext
 	{	
 		if (isset($this->settings['api_trigger']) AND $this->settings['api_trigger'] AND $this->EE->uri->segment(1) == $this->settings['api_trigger'])
 		{
+			// set session to session passed via hook
+			$this->EE->session = $sess;
+			
 			// load library
 			$this->EE->load->library('open_api_lib');
 
