@@ -1,4 +1,4 @@
---- ExpressionEngine Open API v0.2 ---
+--- ExpressionEngine Open API v0.3 ---
 ---
 The Open API is an ExpressionEngine add-on that brings front-end CRUD capability to websites.
 ---
@@ -13,10 +13,7 @@ Authenticate member with username and get a session_id that can be used for requ
 | username | The username of the member to authenticate | required |
 | password | The password of the member to authenticate | required |
 POST /authenticate_username
-{ 
-  "username": "michael",
-  "password": "abc123"
-}
+username=michael&password=abc123
 < 200
 < Content-Type: application/json
 {
@@ -33,10 +30,7 @@ Authenticate member with email and get a session_id that can be used for request
 | email | The email of the member to authenticate | required |
 | password | The password of the member to authenticate | required |
 POST /authenticate_email
-{ 
-  "email": "michael@five.com",
-  "password": "abc123"
-}
+email=michael@five.com&password=abc123
 < 200
 < Content-Type: application/json
 {
@@ -53,10 +47,7 @@ Authenticate member with id and get a session_id that can be used for requests t
 | member_id | The id of the member to authenticate | required |
 | password | The password of the member to authenticate | required |
 POST /authenticate_member_id
-{ 
-  "member_id": "1",
-  "password": "abc123"
-}
+member_id=1&password=abc123
 < 200
 < Content-Type: application/json
 {
@@ -76,10 +67,7 @@ Get channel
 | Request parameters  |  |  |
 | :-------------  | ------------- | ------------- |
 | channel_id | The id of the channel to get | required |
-GET /get_channel
-{ 
-  "channel_id": "1"
-}
+GET /get_channel?channel_id=1
 < 200
 < Content-Type: application/json
 [
@@ -144,10 +132,7 @@ Get channels
 | Request parameters  |  |  |
 | :-------------  | ------------- | ------------- |
 | site_id | The id of the site to get channels from | optional |
-GET /get_channels
-{
-  "site_id": "1"
-}
+GET /get_channels?site_id=1
 < 200
 < Content-Type: application/json
 [
@@ -267,11 +252,7 @@ Create channel
 | channel_title | The title of the new channel | required |
 | session_id | An authenticated session id | required if not using cookie |
 POST /create_channel
-{ 
-  "channel_name": "new_channel", 
-  "channel_title": "New Channel", 
-  "session_id": "87b1bc8c82c40214d8682c9cbada3e91f2df6b98"
-}
+channel_name=new_channel&channel_title=New Channel&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
 {
@@ -287,10 +268,7 @@ Update channel
 | channel_id | The id of the channel to update | required |
 | session_id | An authenticated session id | required if not using cookie |
 POST /update_channel
-{ 
-  "channel_id": "1",, 
-  "session_id": "87b1bc8c82c40214d8682c9cbada3e91f2df6b98"
-}
+channel_id=1&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
 {
@@ -306,10 +284,7 @@ Delete channel
 | channel_id | The id of the channel to delete | required |
 | session_id | An authenticated session id | required if not using cookie |
 POST /delete_channel
-{ 
-  "channel_id": "1", 
-  "session_id": "87b1bc8c82c40214d8682c9cbada3e91f2df6b98"
-}
+channel_id=1&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
 {
@@ -327,10 +302,7 @@ Get channel entry
 | Request parameters  |  |  |
 | :-------------  | ------------- | ------------- |
 | entry_id | The id of the entry to get | required |
-GET /get_channel_entry
-{ 
-  "entry_id": "1" 
-}
+GET /get_channel_entry?entry_id=1
 < 200
 < Content-Type: application/json
 [
@@ -360,20 +332,7 @@ Get channel entries
 | sort | The sort order of the entries | optional | defaults to "desc"  |
 | limit | The number of entries to get | optional |  |
 | offset | The number of entries to offset by | optional |  |
-GET /get_channel_entries
-{ 
-  "channel_id": "1",
-  "select": "title, url_title, entry_date",
-  "where": {
-    "status": "open",
-    "entry_date": "> 1368192049",
-    "custom_field_name": "Text"
-  },
-  "order_by": "title",
-  "sort": "asc",
-  "limit": "10",
-  "offset": "2"
-}
+GET /get_channel_entries?channel_id=1&select=title,url_title,entry_date&where[status]=open&where[entry_date]=1368192049&where[custom_field_name]=Text&order_by=title&sort=asc&limit=10&offset=2
 < 200
 < Content-Type: application/json
 [
@@ -415,14 +374,7 @@ Create channel entry
 | custom_field_name | Any custom field name | optional | required custom fields must be submitted |
 | session_id | An authenticated session id | required if not using cookie |
 POST /create_channel_entry
-{
-  "channel_id": "1",
-  "url_title": "new_entry",
-  "title": "New Entry",
-  "entry_date": "12345678",
-  "custom_field_name": "Text", 
-  "session_id": "87b1bc8c82c40214d8682c9cbada3e91f2df6b98"
-}
+channel_id=1&url_title=new_entry&title=New Entry&entry_date=12345678&custom_field_name=Text&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
 {
@@ -443,15 +395,7 @@ Update channel entry
 | custom_field_name | Any custom field name | optional |
 | session_id | An authenticated session id | required if not using cookie |
 POST /update_channel_entry
-{
-  "channel_id": "1",
-  "entry_id": "1",
-  "url_title": "new_entry",
-  "title": "New Entry",
-  "entry_date": "12345678",
-  "custom_field_name": "Text", 
-  "session_id": "87b1bc8c82c40214d8682c9cbada3e91f2df6b98"
-}
+channel_id=1&entry_id=1&url_title=new_entry&title=New Entry&entry_date=12345678&custom_field_name=Text&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
 {
@@ -467,10 +411,7 @@ Delete channel entry
 | entry_id | The id of the entry or an array of entry ids to delete | required |
 | session_id | An authenticated session id | required if not using cookie |
 POST /delete_channel_entry
-{ 
-  "entry_id": "1", 
-  "session_id": "87b1bc8c82c40214d8682c9cbada3e91f2df6b98"
-}
+entry_id=1&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
 {
@@ -488,10 +429,7 @@ Get category
 | Request parameters  |  |  |
 | :-------------  | ------------- | ------------- |
 | cat_id | The id of the category to get | required |
-GET /get_category
-{ 
-  "cat_id": "1"
-}
+GET /get_category?cat_id=1
 < 200
 < Content-Type: application/json
 [
@@ -520,16 +458,7 @@ Get categories
 | sort | The sort order of the entries | optional | defaults to "asc"  |
 | limit | The number of entries to get | optional |  |
 | offset | The number of entries to offset by | optional |  |
-GET /get_categories
-{
-  "where": {
-    "group_id": "1"
-  },
-  "order_by": "cat_orer",
-  "sort": "asc",
-  "limit": "10",
-  "offset": "2"
-}
+GET /get_categories?where[group_id]=1&order_by=cat_orer&sort=asc&limit=10&offset=2
 < 200
 < Content-Type: application/json
 [
@@ -564,10 +493,7 @@ Get categories by group
 | Request parameters  |  |  |
 | :-------------  | ------------- | ------------- |
 | group_id | The id of the category group to get the categories of | required |
-GET /get_categories_by_group
-{ 
-  "group_id": "2"
-}
+GET /get_categories_by_group?group_id=2
 < 200
 < Content-Type: application/json
 [
@@ -608,10 +534,7 @@ Get categories by channel
 | sort | The sort order of the entries | optional | defaults to "asc"  |
 | limit | The number of entries to get | optional |  |
 | offset | The number of entries to offset by | optional |  |
-GET /get_categories_by_channel
-{ 
-  "channel_id": "1"
-}
+GET /get_categories_by_channel?channel_id=1
 < 200
 < Content-Type: application/json
 [
@@ -654,16 +577,7 @@ Create category
 | cat_order | The order of the new category | optional |
 | session_id | An authenticated session id | required if not using cookie |
 POST /create_category
-{ 
-  "group_id" : "1",
-  "cat_url_title": "new_category", 
-  "cat_name": "New Category",
-  "site_id" : "1",
-  "parent_id" : "0",
-  "cat_description": "New Category Description",
-  "cat_order" : "4", 
-  "session_id": "87b1bc8c82c40214d8682c9cbada3e91f2df6b98"
-}
+group_id=1&cat_url_title=new_category&cat_name=New Category&site_id=1&parent_id=0"&cat_description=New Category Description&cat_order=4&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
 {
@@ -685,16 +599,7 @@ Update category
 | cat_order | The order of the category | optional |
 | session_id | An authenticated session id | required if not using cookie |
 POST /update_category
-{ 
-  "cat_id": "1",
-  "group_id" : "1",
-  "cat_url_title": "new_category", 
-  "cat_name": "New Category",
-  "parent_id" : "0",
-  "cat_description": "New Category Description",
-  "cat_order" : "4", 
-  "session_id": "87b1bc8c82c40214d8682c9cbada3e91f2df6b98"
-}
+cat_id=1&group_id=1&cat_url_title=new_category&cat_name=New Category&site_id=1&parent_id=0"&cat_description=New Category Description&cat_order=4&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
 {
@@ -710,10 +615,7 @@ Delete category
 | cat_id | The id of the category to delete | required |
 | session_id | An authenticated session id | required if not using cookie |
 POST /delete_category
-{ 
-  "cat_id": "1", 
-  "session_id": "87b1bc8c82c40214d8682c9cbada3e91f2df6b98"
-}
+cat_id=1&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
 {
@@ -730,10 +632,7 @@ Get category group
 | Request parameters  |  |  |
 | :-------------  | ------------- | ------------- |
 | group_id | The id of the category group to get | required |
-GET /get_category_group
-{ 
-  "group_id": "1"
-}
+GET /get_category_group?group_id=1
 < 200
 < Content-Type: application/json
 [
@@ -785,8 +684,6 @@ Create category group
 | Request parameters  |  |  |
 | :-------------  | ------------- | ------------- |
 POST /create_category_group
-{ 
-}
 < 200
 < Content-Type: application/json
 {
@@ -801,9 +698,7 @@ Update category group
 | :-------------  | ------------- | ------------- |
 | group_id | The id of the category group to update | required |
 POST /update_category_group
-{ 
-  "group_id" : "1"
-}
+group_id=1
 < 200
 < Content-Type: application/json
 {
@@ -818,9 +713,7 @@ Delete category group
 | :-------------  | ------------- | ------------- |
 | group_id | The id of the category group to delete | required |
 POST /delete_category_group
-{ 
-  "group_id": "1"
-}
+group_id=1
 < 200
 < Content-Type: application/json
 {
@@ -837,10 +730,7 @@ Get member
 | Request parameters  |  |  |
 | :-------------  | ------------- | ------------- |
 | member_id | The id of the member to get | required |
-GET /get_member
-{ 
-  "member_id": "1"
-}
+GET /get_member?member_id=1
 < 200
 < Content-Type: application/json
 [
@@ -865,16 +755,7 @@ Get members
 | sort | The sort order of the entries | optional | defaults to "asc"  |
 | limit | The number of entries to get | optional |  |
 | offset | The number of entries to offset by | optional |  |
-GET /get_members
-{
-  "where": {
-    "group_id": "1"
-  },
-  "order_by": "member_id",
-  "sort": "asc",
-  "limit": "10",
-  "offset": "0"
-}
+GET /get_members?where[group_id]=1&order_by=member_id&sort=asc&limit=10&offset=0
 < 200
 < Content-Type: application/json
 [
@@ -904,10 +785,7 @@ Get member group
 | Request parameters  |  |  |
 | :-------------  | ------------- | ------------- |
 | group_id | The id of the member group to get | required |
-GET /get_member_group
-{ 
-  "group_id": "1"
-}
+GET /get_member_group?group_id=1
 < 200
 < Content-Type: application/json
 [
@@ -927,13 +805,7 @@ Get member groups
 | sort | The sort order of the entries | optional | defaults to "asc"  |
 | limit | The number of entries to get | optional |  |
 | offset | The number of entries to offset by | optional |  |
-GET /get_member_groups
-{
-  "order_by": "group_id",
-  "sort": "asc",
-  "limit": "10",
-  "offset": "0"
-}
+GET /get_member_groups?order_by=group_id&sort=asc&limit=10&offset=0
 < 200
 < Content-Type: application/json
 [
