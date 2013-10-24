@@ -9,8 +9,8 @@
  * @author			Ben Croker
  * @link			http://www.putyourlightson.net/open-api/
  */
- 
- 
+
+
 class Open_api_lib
 {
 
@@ -22,14 +22,14 @@ class Open_api_lib
 		// make a local reference to the ExpressionEngine super object
 		$this->EE =& get_instance();
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Call Method
 	 */
 	function call_method($method='')
-	{	
+	{
 		// start output buffer so we can catch any errors
 		ob_start();
 
@@ -42,11 +42,11 @@ class Open_api_lib
 		// call the method
 		$this->$method();
 	}
-	
+
 	// --------------------------------------------------------------------
 	// Authentication
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Authenticate Username
 	 */
@@ -62,14 +62,14 @@ class Open_api_lib
 		{
 			$this->response('Authentication failed', 401);
 		}
-		
+
 		$member_id = $row->member_id;
 
 
 		// authenticate member
 		$this->_authenticate_member($member_id, $vars['password']);
 	}
-	
+
 	/**
 	 * Authenticate Email
 	 */
@@ -85,14 +85,14 @@ class Open_api_lib
 		{
 			$this->response('Authentication failed', 401);
 		}
-		
+
 		$member_id = $row->member_id;
 
 
 		// authenticate member
 		$this->_authenticate_member($member_id, $vars['password']);
 	}
-	
+
 	/**
 	 * Authenticate Member ID
 	 */
@@ -107,11 +107,11 @@ class Open_api_lib
 		// authenticate member
 		$this->_authenticate_member($vars['member_id'], $vars['password']);
 	}
-	
+
 	// --------------------------------------------------------------------
 	// Channels
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Channel
 	 */
@@ -128,7 +128,7 @@ class Open_api_lib
 
 		// load channel data library
 		$this->_load_library('channel_data');
-		
+
 		$data = $this->EE->channel_data_lib->get_channel($vars['channel_id'])->result();
 
 		// end hook
@@ -136,9 +136,9 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Channels
 	 */
@@ -157,9 +157,9 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Create Channel
 	 */
@@ -184,9 +184,9 @@ class Open_api_lib
 
 		$this->response(array('channel_id' => $data));
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Update Channel
 	 */
@@ -194,7 +194,7 @@ class Open_api_lib
 	{
 		// get posted variables
 		$vars = $this->_get_vars('post', array('channel_id', 'channel_name', 'channel_title'));
-		
+
 		// validate id
 		$this->_validate_id($vars['channel_id']);
 
@@ -214,9 +214,9 @@ class Open_api_lib
 
 		$this->response(array('channel_id' => $data));
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Delete Channel
 	 */
@@ -224,7 +224,7 @@ class Open_api_lib
 	{
 		// get posted variables
 		$vars = $this->_get_vars('post', array('channel_id'));
-		
+
 		// authenticate session
 		$this->_authenticate_session();
 
@@ -245,7 +245,7 @@ class Open_api_lib
 	// --------------------------------------------------------------------
 	// Channels Entries
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Channel Entry
 	 */
@@ -253,7 +253,7 @@ class Open_api_lib
 	{
 		// get variables
 		$vars = $this->_get_vars('get', array('entry_id'));
-		
+
 		// start hook
 		$vars = $this->_hook('get_channel_entry_start', $vars);
 
@@ -262,14 +262,20 @@ class Open_api_lib
 
 		$data = $this->EE->channel_data_lib->get_channel_entry($vars['entry_id'])->result();
 
+		// Expand file fields
+		if ($data && is_array($data) && count($data) == 1) {
+			$channel_id = $data[0]->channel_id;
+			$data = $this->_expand_file_fields($channel_id, $data);
+		}
+
 		// end hook
 		$data = $this->_hook('get_channel_entry_end', $data);
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Channel Entries
 	 */
@@ -297,14 +303,19 @@ class Open_api_lib
 
 		$data = $this->EE->channel_data_lib->get_channel_entries($vars['channel_id'], $vars['select'], $vars['where'], $vars['order_by'], $vars['sort'], $vars['limit'], $vars['offset'])->result();
 
+		// Expand file fields
+		if ($data && is_array($data) && count($data) > 0) {
+			$data = $this->_expand_file_fields($vars['channel_id'], $data);
+		}
+
 		// end hook
 		$data = $this->_hook('get_channel_entries_end', $data);
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Create Channel Entry
 	 */
@@ -312,7 +323,7 @@ class Open_api_lib
 	{
 		// get posted variables
 		$vars = $this->_get_vars('post', array('channel_id', 'title', 'entry_date'));
-		
+
 		// authenticate session
 		$this->_authenticate_session();
 
@@ -335,9 +346,9 @@ class Open_api_lib
 
 		$this->response(array('entry_id' => $this->EE->api_channel_entries->entry_id));
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Update Channel Entry
 	 */
@@ -348,7 +359,7 @@ class Open_api_lib
 
 		// authenticate session
 		$this->_authenticate_session();
-		
+
 		// check if user has permission
 		$this->_check_permission('channel_entry', 'entry_id', $vars['entry_id']);
 
@@ -368,9 +379,9 @@ class Open_api_lib
 
 		$this->response(array('entry_id' => $vars['entry_id']));
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Delete Channel Entry
 	 */
@@ -384,7 +395,7 @@ class Open_api_lib
 
 		// check if user has permission
 		$this->_check_permission('channel_entry', 'entry_id', $vars['entry_id']);
-		
+
 		// load and instantiate api library
 		$this->_load_library('api', 'channel_entries');
 
@@ -398,11 +409,11 @@ class Open_api_lib
 
 		$this->response(array('entry_id' => $vars['entry_id']));
 	}
-	
+
 	// --------------------------------------------------------------------
 	// Categories
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Category
 	 */
@@ -410,7 +421,7 @@ class Open_api_lib
 	{
 		// get variables
 		$vars = $this->_get_vars('get', array('cat_id'));
-		
+
 		// start hook
 		$vars = $this->_hook('get_category_start', $vars);
 
@@ -424,9 +435,9 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Categories
 	 */
@@ -457,9 +468,9 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Categories by Group
 	 */
@@ -481,9 +492,9 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Categories by Channel
 	 */
@@ -501,7 +512,7 @@ class Open_api_lib
 
 		// prepare variables for sql
 		$vars = $this->_prepare_sql($vars);
-		
+
 		// start hook
 		$vars = $this->_hook('get_categories_by_channel_start', $vars);
 
@@ -517,7 +528,7 @@ class Open_api_lib
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Create Category
 	 */
@@ -525,7 +536,7 @@ class Open_api_lib
 	{
 		// get variables
 		$vars = $this->_get_vars('post', array('group_id', 'cat_url_title', 'cat_name'));
-		
+
 		// validate category url title
 		$this->EE->load->library('form_validation');
 		$word_separator = $this->EE->config->item('word_separator');
@@ -552,9 +563,9 @@ class Open_api_lib
 
 		$this->response(array('cat_id' => $this->EE->db->insert_id()));
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Update Category
 	 */
@@ -562,7 +573,7 @@ class Open_api_lib
 	{
 		// get variables
 		$vars = $this->_get_vars('post', array('cat_id'));
-		
+
 		// validate category url title
 		if (isset($vars['cat_url_title']))
 		{
@@ -583,9 +594,9 @@ class Open_api_lib
 
 		$this->response(array('cat_id' => $vars['cat_id']));
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Delete Category
 	 */
@@ -605,11 +616,11 @@ class Open_api_lib
 
 		$this->response(array('cat_id' => $vars['cat_id']));
 	}
-	
+
 	// --------------------------------------------------------------------
 	// Category Groups
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Category Group
 	 */
@@ -617,7 +628,7 @@ class Open_api_lib
 	{
 		// get variables
 		$vars = $this->_get_vars('get', array('group_id'));
-		
+
 		// start hook
 		$vars = $this->_hook('get_category_group_start', $vars);
 
@@ -631,14 +642,14 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Category Groups
 	 */
 	function get_category_groups()
-	{	
+	{
 		$vars = $this->_get_vars('get', array(), array(
 			'select' => array(),
 			'where' => array(),
@@ -664,19 +675,19 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Create Category Group
 	 */
 	function create_category_group()
 	{
-		
+
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Delete Category Group
 	 */
@@ -696,11 +707,11 @@ class Open_api_lib
 
 		$this->response(array('group_id' => $vars['group_id']));
 	}
-	
+
 	// --------------------------------------------------------------------
 	// Members
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Member
 	 */
@@ -708,7 +719,7 @@ class Open_api_lib
 	{
 		// get variables
 		$vars = $this->_get_vars('get', array('member_id'));
-		
+
 		// start hook
 		$vars = $this->_hook('get_member_start', $vars);
 
@@ -722,9 +733,9 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Members
 	 */
@@ -755,11 +766,11 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
 	// Member Groups
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Member Group
 	 */
@@ -769,7 +780,7 @@ class Open_api_lib
 		$vars = $this->_get_vars('get', array('group_id'), array(
 			'select' => array()
 		));
-		
+
 		// prepare variables for sql
 		$vars = $this->_prepare_sql($vars);
 
@@ -786,7 +797,7 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	/**
 	 * Get Member Groups
 	 */
@@ -817,17 +828,17 @@ class Open_api_lib
 
 		$this->response($data);
 	}
-	
+
 	// --------------------------------------------------------------------
 	// Helper Methods
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Response
 	 */
 	function response($data='', $response_code=200)
 	{
-		// clear output buffer 
+		// clear output buffer
 		ob_clean();
 
 		// json encode response
@@ -852,14 +863,14 @@ class Open_api_lib
 
 		exit();
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Load Library
 	 */
 	private function _load_library($library='', $instantiate='')
-	{	
+	{
 		if ($library == 'channel_data')
 		{
 			// load channel data library
@@ -878,9 +889,9 @@ class Open_api_lib
 			$this->EE->load->library('stats');
 		}
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Validate ID
 	 */
@@ -893,7 +904,7 @@ class Open_api_lib
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Authenticate Member
 	 */
@@ -904,7 +915,7 @@ class Open_api_lib
 
 		// load auth library
 		$this->EE->load->library('auth');
-		
+
 		// authenticate member id
 		$userdata = $this->EE->auth->authenticate_id($member_id, $password);
 
@@ -922,17 +933,17 @@ class Open_api_lib
 		// get member details
 		$query = $this->EE->db->get_where('members', array('member_id' => $member_id));
 		$member = $query->row();
-		
+
 		$this->response(array(
-			'session_id' => $session_id, 
-			'member_id' => $member_id, 
+			'session_id' => $session_id,
+			'member_id' => $member_id,
 			'username' => $member->username,
 			'screen_name' => $member->screen_name
 		));
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Authenticate Session
 	 */
@@ -946,7 +957,7 @@ class Open_api_lib
 		{
 			$this->response('Authentication required', 401);
 		}
-		
+
 
 		// check if session id exists in database and get member id
 		$this->EE->db->select('member_id');
@@ -957,7 +968,7 @@ class Open_api_lib
 		{
 			$this->response('Authentication required', 401);
 		}
-		
+
 		$member_id = $row->member_id;
 
 
@@ -965,7 +976,7 @@ class Open_api_lib
 		$this->EE->db->select('group_id');
 		$this->EE->db->where('member_id', $member_id);
 		$query = $this->EE->db->get('members');
-		
+
 		$group_id = $query->row()->group_id;
 
 
@@ -984,7 +995,7 @@ class Open_api_lib
 			$this->EE->db->where('group_id', $group_id);
 			$query = $this->EE->db->get('channel_member_groups');
 		}
-		
+
 		foreach ($query->result() as $row)
 		{
 			$assigned_channels[] = $row->channel_id;
@@ -1009,7 +1020,7 @@ class Open_api_lib
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Check Permission
 	 */
@@ -1030,7 +1041,7 @@ class Open_api_lib
 
 			// get channel id
 			$channel_id = $value;
-			
+
 			// if entry id was passed as the variable
 			if ($var_name == 'entry_id')
 			{
@@ -1050,16 +1061,16 @@ class Open_api_lib
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Variables
 	 */
 	private function _get_vars($method, $required=array(), $defaults=array())
-	{	
+	{
 		$vars = ($method == 'post') ? $_POST : $_GET;
 
 		// populate the variables
-		foreach ($vars as $key => $val) 
+		foreach ($vars as $key => $val)
 		{
 			$vars[$key] = ($method == 'post') ? $this->EE->input->post($key) : $this->EE->input->get($key);
 		}
@@ -1068,7 +1079,7 @@ class Open_api_lib
 		$missing = array();
 
 		// check if any required variables are not set or blank
-		foreach ($required as $key) 
+		foreach ($required as $key)
 		{
 			if (!isset($vars[$key]) OR $vars[$key] == '')
 			{
@@ -1083,7 +1094,7 @@ class Open_api_lib
 
 
 		// populate fields with defaults if not set
-		foreach ($defaults as $key => $val) 
+		foreach ($defaults as $key => $val)
 		{
 			if (!isset($vars[$key]))
 			{
@@ -1096,12 +1107,12 @@ class Open_api_lib
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Map Custom Fields
 	 */
 	private function _map_custom_fields($vars, $channel_id)
-	{	
+	{
 		// load channel data library
 		$this->_load_library('channel_data');
 
@@ -1109,7 +1120,7 @@ class Open_api_lib
 		$fields = $this->EE->channel_data_lib->get_channel_fields($channel_id)->result();
 
 		// map custom fields
-		foreach ($fields as $field) 
+		foreach ($fields as $field)
 		{
 			if (isset($vars[$field->field_name]))
 			{
@@ -1117,21 +1128,21 @@ class Open_api_lib
 				unset($vars[$field->field_name]);
 			}
 		}
-		
+
 		return $vars;
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Prepare for SQL
 	 */
 	private function _prepare_sql($vars, $ambiguous=array(), $table='')
-	{	
+	{
 		$prepped_vars = array('select', 'where');
 
 		// loop through variables
-		foreach ($vars as $key => &$var) 
+		foreach ($vars as $key => &$var)
 		{
 			if (in_array($key, $prepped_vars))
 			{
@@ -1139,7 +1150,7 @@ class Open_api_lib
 				$var = is_array($var) ? $var : explode(',', str_replace(' ', '', $var));
 
 				// loop through fields
-				foreach ($var as $key => $val) 
+				foreach ($var as $key => $val)
 				{
 					// conditionals to search for
 					$conditionals = array('!=', '<=', '>=', '<', '>', '=', 'like', 'LIKE');
@@ -1177,7 +1188,7 @@ class Open_api_lib
 					}
 
 					else
-					{	
+					{
 						// if the value is ambiguous
 						if (in_array($val, $ambiguous))
 						{
@@ -1211,7 +1222,7 @@ class Open_api_lib
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Hook - allows each method to check for relevant hooks
 	 */
@@ -1222,7 +1233,31 @@ class Open_api_lib
 			$data = $this->EE->extensions->call('open_api_'.$hook, $data);
 			if ($this->EE->extensions->end_script === TRUE) return;
 		}
-		
+
+		return $data;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Expand file fields
+	 */
+	private function _expand_file_fields($channel_id, $data)
+	{
+		// Get the fields for this channel
+		$fields = $this->EE->channel_data_lib->get_channel_fields($channel_id)->result();
+
+		// Loop through fields and check for file or safecracker_file fields
+		foreach ($fields as $field_data) {
+			if ($field_data->field_type == 'file' || $field_data->field_type == 'safecracker_file') {
+
+				// Parse (i.e. expand) field contents
+				$this->EE->load->library('file_field');
+				foreach ($data as $key => $value) {
+					$data[$key]->{$field_data->field_name} = $this->EE->file_field->parse_field($data[$key]->{$field_data->field_name});
+				}
+			}
+		}
 		return $data;
 	}
 
