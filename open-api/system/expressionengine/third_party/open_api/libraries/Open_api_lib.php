@@ -1244,6 +1244,9 @@ class Open_api_lib
 	 */
 	private function _expand_file_fields($channel_id, $data)
 	{
+		// Load file field library
+		$this->EE->load->library('file_field');
+
 		// Get the fields for this channel
 		$fields = $this->EE->channel_data_lib->get_channel_fields($channel_id)->result();
 
@@ -1252,7 +1255,6 @@ class Open_api_lib
 			if ($field_data->field_type == 'file' || $field_data->field_type == 'safecracker_file') {
 
 				// Parse (i.e. expand) field contents
-				$this->EE->load->library('file_field');
 				foreach ($data as $key => $value) {
 					$data[$key]->{$field_data->field_name} = $this->EE->file_field->parse_field($data[$key]->{$field_data->field_name});
 				}
