@@ -267,6 +267,13 @@ class Open_api_lib
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_channel_entry($vars['entry_id'])->result();
+		
+		// expand file fields
+		if (count($data)) 
+		{
+			$channel_id = $data[0]->channel_id;
+			$data = $this->_expand_file_fields($channel_id, $data);
+		}
 
 		// end hook
 		$data = $this->_hook('get_channel_entry_end', $data);
@@ -305,6 +312,12 @@ class Open_api_lib
 		$this->_load_library('channel_data');
 
 		$data = $this->EE->channel_data_lib->get_channel_entries($vars['channel_id'], $vars['select'], $vars['where'], $vars['order_by'], $vars['sort'], $vars['limit'], $vars['offset'])->result();
+
+		// expand file fields
+		if (count($data)) 
+		{
+			$data = $this->_expand_file_fields($vars['channel_id'], $data);
+		}
 
 		// end hook
 		$data = $this->_hook('get_channel_entries_end', $data);
@@ -1194,6 +1207,37 @@ class Open_api_lib
 
 
 		return $vars;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Expand file fields
+	 */
+	private function _expand_file_fields($channel_id, $data)
+	{
+		// load file field library
+		$this->EE->load->library('file_field');
+
+		// get fields for this channel
+		$fields = $this->EE->channel_data_lib->get_channel_fields($channel_id)->result();
+
+		// loop through fields
+		foreach ($fields as $field_data) 
+		{
+			// if this is a file or safecracker_file field
+			if ($field_data->field_type == 'file' OR $field_data->field_type == 'safecracker_file') 
+			{
+				$field_name = $field_data->field_name;
+
+				// expand field contents
+				foreach ($data as $key => $value) 
+				{
+					$data[$key]->$field_name = $this->EE->file_field->parse_string($data[$key]->$field_name);
+				}
+			}
+		}
+		return $data;
 	}
 
 	// --------------------------------------------------------------------
