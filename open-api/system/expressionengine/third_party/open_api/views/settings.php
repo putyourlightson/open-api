@@ -7,7 +7,7 @@ echo form_open('C=addons_extensions'.AMP.'M=save_extension_settings'.AMP.'file=o
 $this->table->set_template($cp_pad_table_template);
 $this->table->set_heading(
     array('data' => lang('preference'), 'style' => 'width: 25%;'),
-    lang('settings')
+    lang('setting')
 );
 
 foreach ($settings['general'] as $key => $val)

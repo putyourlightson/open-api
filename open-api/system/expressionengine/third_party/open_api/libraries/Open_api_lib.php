@@ -1057,7 +1057,7 @@ class Open_api_lib
 				// throw error if not public or restricted
 				if ($access != 'public' AND $access != 'restricted')
 				{
-					$this->response('You are not permitted to perform this action', 400);
+					$this->response('You are not permitted to perform this action', 403);
 				}
 
 				// restricted access
@@ -1087,7 +1087,7 @@ class Open_api_lib
 					}
 
 					// error
-					$this->response('You are not permitted to perform this action', 400);			
+					$this->response('You are not permitted to perform this action', 403);			
 				}
 			}
 		}
@@ -1113,7 +1113,7 @@ class Open_api_lib
 				// check assigned channels
 				if (!in_array($channel_id, $assigned_channels))
 				{
-					$this->response('You are not permitted to perform this action', 400);
+					$this->response('You are not permitted to perform this action', 403);
 				}
 			}
 		}

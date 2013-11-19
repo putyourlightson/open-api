@@ -39,7 +39,7 @@ $lang = array(
 "Channel",
 
 "access" =>
-"Access",
+"Read Access",
 
 "member_groups" =>
 "Member Groups",
