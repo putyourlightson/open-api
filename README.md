@@ -8,4 +8,4 @@ Full add-on documentation: http://www.putyourlightson.net/open-api/docs
 
 API documentation: http://docs.eeopenapi.apiary.io/
 
-* Please note that Open API isin beta and therefore not ready for use in production.
+\* *Please note that Open API is in beta and therefore not ready for use in production.*
