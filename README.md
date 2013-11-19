@@ -6,4 +6,6 @@ Open API is a front-end API for ExpressionEngine that provides authentication an
 
 Full add-on documentation: http://www.putyourlightson.net/open-api/docs
 
-API doumentation: http://docs.eeopenapi.apiary.io/
+API documentation: http://docs.eeopenapi.apiary.io/
+
+\* *Please note that Open API is in beta and therefore not ready for use in production.*
