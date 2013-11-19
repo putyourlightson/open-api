@@ -63,15 +63,64 @@ class Open_api_ext
 	// --------------------------------------------------------------------
 	
 	/**
-	 * Settings
+	 * Settings Form
 	 */
-	function settings()
-	{	
-		$settings = array();
-
-	    $settings['api_trigger'] = array('i', '', '');
+	function settings_form($settings)
+	{
+		$this->EE->load->helper('form');
+		$this->EE->load->library('table');
 	
-		return $settings;
+		$this->EE->cp->load_package_js('script');
+
+
+		$vars = array();
+
+		$vars['settings']['general'] = array(
+			'api_trigger' => isset($settings['api_trigger']) ? $settings['api_trigger'] : '',
+			'universal_api_key' => isset($settings['universal_api_key']) ? $settings['universal_api_key'] : ''
+		);
+
+		$vars['settings']['channel_access'] = isset($settings['channel_access']) ? $settings['channel_access'] : array();
+
+
+		// access options
+		$vars['data']['access_options'] = array('private', 'public', 'restricted');
+
+
+		// get all channels
+		$this->EE->db->order_by('channel_title');
+		$query = $this->EE->db->get('channels');
+		$vars['data']['channels'] = $query->result();
+
+
+		// get all member groups except for super admins (they always have access)
+		$this->EE->db->where('group_id != 1');
+		$this->EE->db->order_by('group_title');
+		$query = $this->EE->db->get('member_groups');
+		$vars['data']['member_groups'] = $query->result();
+
+	
+		return $this->EE->load->view('settings', $vars, TRUE);
+	}
+
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Save Settings
+	 */
+	function save_settings()
+	{
+		if (empty($_POST))
+		{
+			show_error($this->EE->lang->line('unauthorized_access'));
+		}
+		
+		unset($_POST['submit']);
+			
+		$this->EE->db->where('class', __CLASS__);
+		$this->EE->db->update('extensions', array('settings' => serialize($_POST)));
+	
+		$this->EE->session->set_flashdata('message_success', $this->EE->lang->line('preferences_updated'));
 	}
 
 	// --------------------------------------------------------------------

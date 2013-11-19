@@ -17,8 +17,35 @@ $lang = array(
 "api_trigger" =>
 "API Trigger",
 
-"api_key" =>
-"API Key",
+"api_trigger_instructions" =>
+"Must be set in order to access the API",
+
+"universal_api_key" =>
+"Universal API Key",
+
+"universal_api_key_instructions" =>
+"Allows read access to all restricted channels",
+
+"private" =>
+"Private",
+
+"restricted" =>
+"Restricted",
+
+"public" =>
+"Public",
+
+"channel" =>
+"Channel",
+
+"access" =>
+"Access",
+
+"member_groups" =>
+"Member Groups",
+
+"api_keys" =>
+"API Keys",
 
 ''=>''
 );
