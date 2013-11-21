@@ -44,6 +44,9 @@ $lang = array(
 "access" =>
 "Access",
 
+"method_access" =>
+"Method Access",
+
 "entry_access" =>
 "Entry Access",
 

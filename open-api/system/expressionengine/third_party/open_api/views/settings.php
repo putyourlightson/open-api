@@ -26,7 +26,7 @@ echo '<br/><br/>';
 $this->table->set_template($cp_pad_table_template);
 $this->table->set_heading(
     array('data' => lang('method'), 'style' => 'width: 25%;'),
-    array('data' => lang('access'), 'style' => 'width: 25%;'),
+    array('data' => lang('method_access'), 'style' => 'width: 25%;'),
     array('data' => lang('member_groups'), 'style' => 'width: 25%;'),
     array('data' => lang('api_keys'), 'style' => 'width: 25%;')
 );
