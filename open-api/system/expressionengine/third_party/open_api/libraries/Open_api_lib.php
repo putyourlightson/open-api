@@ -126,9 +126,6 @@ class Open_api_lib
 		// validate id
 		$this->_validate_id($vars['channel_id']);
 
-		// check if user has permission
-		$this->_check_permission('channel', 'channel_id', $vars['channel_id']);
-
 		// load channel data library
 		$this->_load_library('channel_data');
 		
@@ -260,9 +257,6 @@ class Open_api_lib
 		// start hook
 		$vars = $this->_hook('get_channel_entry_start', $vars);
 
-		// check if user has permission
-		$this->_check_permission('channel_entry', 'entry_id', $vars['entry_id'], 'read');
-
 		// load channel data library
 		$this->_load_library('channel_data');
 
@@ -304,9 +298,6 @@ class Open_api_lib
 
 		// start hook
 		$vars = $this->_hook('get_channel_entries_start', $vars);
-
-		// check if user has permission
-		$this->_check_permission('channel_entry', 'channel_id', $vars['channel_id'], 'read');
 
 		// load channel data library
 		$this->_load_library('channel_data');
@@ -841,7 +832,7 @@ class Open_api_lib
 	}
 	
 	// --------------------------------------------------------------------
-	// Helper Methods
+	// Public Helper Methods
 	// --------------------------------------------------------------------
 	
 	/**
@@ -872,9 +863,27 @@ class Open_api_lib
 		// output the response and end the script
 		echo $response;
 
-		exit();
+		// stop any further processing
+		die();
 	}
 	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Get Channel Id of Entry
+	 */
+	function get_channel_id($entry_id)
+	{	
+		$this->EE->db->select('channel_id');
+		$this->EE->db->where('entry_id', $entry_id);
+		$query = $this->EE->db->get('channel_titles');
+		$row = $query->row();
+		
+		return ($row ? $row->channel_id : '');
+	}
+
+	// --------------------------------------------------------------------
+	// Private Helper Methods
 	// --------------------------------------------------------------------
 	
 	/**
@@ -1035,7 +1044,7 @@ class Open_api_lib
 	/**
 	 * Check Permission
 	 */
-	private function _check_permission($data_type, $var_name, $value, $access_type='')
+	private function _check_permission($data_type, $var_name, $value)
 	{
 		$group_id = $this->EE->session->userdata['group_id'];
 
@@ -1045,122 +1054,27 @@ class Open_api_lib
 			return;
 		}
 
-		// read access
-		if ($access_type == 'read')
+		if ($data_type == 'channel_entry')
 		{
-			// get settings
-			$settings = $this->_get_settings();
+			// get assigned channels
+			$assigned_channels = $this->EE->session->userdata['assigned_channels'];
 
-			// channel or channel entry data types
-			if ($data_type == 'channel' OR $data_type == 'channel_entry')
+			// get channel id
+			$channel_id = $value;
+			
+			// if entry id was passed as the variable
+			if ($var_name == 'entry_id')
 			{
 				// get channel id
-				$channel_id = $value;
-				
-				// if entry id was passed as the variable
-				if ($var_name == 'entry_id')
-				{
-					// get channel id
-					$channel_id = $this->_get_channel_id($value);
-				}
-
-				// get access
-				$access = isset($settings['channel_access'][$channel_id]['access']) ? $settings['channel_access'][$channel_id]['access'] : '';
-
-				// throw error if not public or restricted
-				if ($access != 'public' AND $access != 'restricted')
-				{
-					$this->response('You are not permitted to perform this action', 403);
-				}
-
-				// restricted access
-				if ($access == 'restricted')
-				{
-					// check universal api key
-					if ($settings['universal_api_key'] AND $this->EE->input->get('api_key') == $settings['universal_api_key'])
-					{
-						return;
-					}
-
-					// check member group access
-					$member_groups = isset($settings['channel_access'][$channel_id]['member_groups']) ? $settings['channel_access'][$channel_id]['member_groups'] : array();
-
-					if ($group_id AND in_array($group_id, $member_groups))
-					{
-						return;
-					}
-
-					// check api keys
-					$api_keys = isset($settings['channel_access'][$channel_id]['api_keys']) ? $settings['channel_access'][$channel_id]['api_keys'] : '';
-					$api_keys = $api_keys ? explode("\n", $api_keys) : array();
-
-					if (count($api_keys) AND in_array($this->EE->input->get('api_key'), $api_keys))
-					{
-						return;
-					}
-
-					// error
-					$this->response('You are not permitted to perform this action', 403);			
-				}
+				$channel_id = $this->get_channel_id($value);
 			}
-		}
 
-		// other access
-		else
-		{
-			if ($data_type == 'channel_entry')
+			// check assigned channels
+			if (!in_array($channel_id, $assigned_channels))
 			{
-				// get assigned channels
-				$assigned_channels = $this->EE->session->userdata['assigned_channels'];
-
-				// get channel id
-				$channel_id = $value;
-				
-				// if entry id was passed as the variable
-				if ($var_name == 'entry_id')
-				{
-					// get channel id
-					$channel_id = $this->_get_channel_id($value);
-				}
-
-				// check assigned channels
-				if (!in_array($channel_id, $assigned_channels))
-				{
-					$this->response('You are not permitted to perform this action', 403);
-				}
+				$this->response('You are not permitted to perform this action', 403);
 			}
 		}
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Get Settings
-	 */
-	private function _get_settings()
-	{	
-		$this->EE->db->select('settings');
-		$this->EE->db->where('class', 'Open_api_ext');
-		$query = $this->EE->db->get('extensions');
-
-		$settings = $query->row()->settings;
-
-		return ($settings ? unserialize($settings) : array());
-	}
-
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Get Channel Id of Entry
-	 */
-	private function _get_channel_id($entry_id)
-	{	
-		$this->EE->db->select('channel_id');
-		$this->EE->db->where('entry_id', $entry_id);
-		$query = $this->EE->db->get('channel_titles');
-		$row = $query->row();
-		
-		return ($row ? $row->channel_id : '');
 	}
 
 	// --------------------------------------------------------------------

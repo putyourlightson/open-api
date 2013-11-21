@@ -35,11 +35,17 @@ $lang = array(
 "public" =>
 "Public",
 
+"method" =>
+"Method",
+
 "channel" =>
 "Channel",
 
 "access" =>
-"Read Access",
+"Access",
+
+"entry_access" =>
+"Entry Access",
 
 "member_groups" =>
 "Member Groups",
