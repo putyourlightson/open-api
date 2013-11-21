@@ -34,7 +34,11 @@ $this->table->set_heading(
 // loop through methods
 foreach ($data['methods'] as $method)
 {
-	$label = '<label>'.$method.'</label>';
+	// set default access to private
+	$access = isset($settings['method_access'][$method]['access']) ? $settings['method_access'][$method]['access'] : 'private';
+
+	// label
+	$label = '<div class="status '.$access.'"></div> <label>'.$method.'</label>';
 	
 
 	// access options
@@ -44,9 +48,6 @@ foreach ($data['methods'] as $method)
 	{
 		$form_options[$option] = lang($option);
 	}
-
-	// set default access to private
-	$access = isset($settings['method_access'][$method]['access']) ? $settings['method_access'][$method]['access'] : 'private';
 
 	$access_options = form_dropdown(
 		'method_access['.$method.'][access]',
@@ -75,7 +76,7 @@ foreach ($data['methods'] as $method)
 	}
 
 	// wrap in div
-	$member_groups = '<div class="restricted" '.($access != 'restricted' ? 'style="display: none;"' : '').'>'.$member_groups.'</div>';
+	$member_groups = '<div class="options restricted" '.($access != 'restricted' ? 'style="display: none;"' : '').'>'.$member_groups.'</div>';
 
 
 	// api keys
@@ -91,7 +92,7 @@ foreach ($data['methods'] as $method)
 	));
 
 	// wrap in div
-	$api_keys = '<div class="restricted" '.($access != 'restricted' ? 'style="display: none;"' : '').'>'.$api_keys.'</div>';
+	$api_keys = '<div class="options restricted" '.($access != 'restricted' ? 'style="display: none;"' : '').'>'.$api_keys.'</div>';
 
 
 	// add row to table
@@ -116,7 +117,11 @@ $this->table->set_heading(
 // loop through channels
 foreach ($data['channels'] as $channel)
 {
-	$label = '<label>'.$channel->channel_title.'</label>';
+	// set default access to private
+	$access = isset($settings['channel_access'][$channel->channel_id]['access']) ? $settings['channel_access'][$channel->channel_id]['access'] : 'private';
+
+	// label
+	$label = '<div class="status '.$access.'"></div> <label>'.$channel->channel_title.'</label>';
 	
 
 	// access options
@@ -126,9 +131,6 @@ foreach ($data['channels'] as $channel)
 	{
 		$form_options[$option] = lang($option);
 	}
-
-	// set default access to private
-	$access = isset($settings['channel_access'][$channel->channel_id]['access']) ? $settings['channel_access'][$channel->channel_id]['access'] : 'private';
 
 	$access_options = form_dropdown(
 		'channel_access['.$channel->channel_id.'][access]',
@@ -157,7 +159,7 @@ foreach ($data['channels'] as $channel)
 	}
 
 	// wrap in div
-	$member_groups = '<div class="restricted" '.($access != 'restricted' ? 'style="display: none;"' : '').'>'.$member_groups.'</div>';
+	$member_groups = '<div class="options restricted" '.($access != 'restricted' ? 'style="display: none;"' : '').'>'.$member_groups.'</div>';
 
 
 	// api keys
@@ -172,7 +174,7 @@ foreach ($data['channels'] as $channel)
 	));
 
 	// wrap in div
-	$api_keys = '<div class="restricted" '.($access != 'restricted' ? 'style="display: none;"' : '').'>'.$api_keys.'</div>';
+	$api_keys = '<div class="options restricted" '.($access != 'restricted' ? 'style="display: none;"' : '').'>'.$api_keys.'</div>';
 
 
 	// add row to table
@@ -192,3 +194,24 @@ $this->table->clear();
 echo form_close();
 
 ?>
+
+
+<style>
+.status {
+	float: left;
+	margin: 3px 5px 0 -4px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #fff;
+}
+.status.private {
+	background: #990000;
+}
+.status.public {
+	background: #009933;
+}
+.status.restricted {
+	background: #ffa500;
+}
+</style>

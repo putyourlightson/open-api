@@ -2,10 +2,12 @@ $(document).ready(function()
 {
 	$('select.access').change(function() {
 		if ($(this).val() == 'restricted') {
-			$(this).closest('tr').find('.restricted').show();
+			$(this).closest('tr').find('.options.restricted').show();
 		}
-		else {				
-			$(this).closest('tr').find('.restricted').hide();
+		else {
+			$(this).closest('tr').find('.options.restricted').hide();
 		}
+
+		$(this).closest('tr').find('.status').attr('class', 'status ' + $(this).val());
 	});
 });
