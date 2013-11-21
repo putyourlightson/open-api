@@ -38,6 +38,9 @@ $lang = array(
 "method" =>
 "Method",
 
+"api_method" =>
+"API Method",
+
 "channel" =>
 "Channel",
 
