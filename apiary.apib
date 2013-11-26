@@ -1,4 +1,4 @@
---- ExpressionEngine Open API v0.3 ---
+--- ExpressionEngine Open API v0.4 ---
 ---
 The Open API is an ExpressionEngine add-on that brings front-end CRUD capability to websites.
 ---
@@ -13,6 +13,7 @@ Authenticate member with username and get a session_id that can be used for requ
 | username | The username of the member to authenticate | required |
 | password | The password of the member to authenticate | required |
 POST /authenticate_username
+> Content-Type: application/x-www-form-urlencoded
 username=michael&password=abc123
 < 200
 < Content-Type: application/json
@@ -30,6 +31,7 @@ Authenticate member with email and get a session_id that can be used for request
 | email | The email of the member to authenticate | required |
 | password | The password of the member to authenticate | required |
 POST /authenticate_email
+> Content-Type: application/x-www-form-urlencoded
 email=michael@five.com&password=abc123
 < 200
 < Content-Type: application/json
@@ -47,6 +49,7 @@ Authenticate member with id and get a session_id that can be used for requests t
 | member_id | The id of the member to authenticate | required |
 | password | The password of the member to authenticate | required |
 POST /authenticate_member_id
+> Content-Type: application/x-www-form-urlencoded
 member_id=1&password=abc123
 < 200
 < Content-Type: application/json
@@ -252,6 +255,7 @@ Create channel
 | channel_title | The title of the new channel | required |
 | session_id | An authenticated session id | required if not using cookie |
 POST /create_channel
+> Content-Type: application/x-www-form-urlencoded
 channel_name=new_channel&channel_title=New Channel&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
@@ -268,6 +272,7 @@ Update channel
 | channel_id | The id of the channel to update | required |
 | session_id | An authenticated session id | required if not using cookie |
 POST /update_channel
+> Content-Type: application/x-www-form-urlencoded
 channel_id=1&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
@@ -284,6 +289,7 @@ Delete channel
 | channel_id | The id of the channel to delete | required |
 | session_id | An authenticated session id | required if not using cookie |
 POST /delete_channel
+> Content-Type: application/x-www-form-urlencoded
 channel_id=1&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
@@ -374,6 +380,7 @@ Create channel entry
 | custom_field_name | Any custom field name | optional | required custom fields must be submitted |
 | session_id | An authenticated session id | required if not using cookie |
 POST /create_channel_entry
+> Content-Type: application/x-www-form-urlencoded
 channel_id=1&url_title=new_entry&title=New Entry&entry_date=12345678&custom_field_name=Text&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
@@ -395,6 +402,7 @@ Update channel entry
 | custom_field_name | Any custom field name | optional |
 | session_id | An authenticated session id | required if not using cookie |
 POST /update_channel_entry
+> Content-Type: application/x-www-form-urlencoded
 channel_id=1&entry_id=1&url_title=new_entry&title=New Entry&entry_date=12345678&custom_field_name=Text&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
@@ -411,6 +419,7 @@ Delete channel entry
 | entry_id | The id of the entry or an array of entry ids to delete | required |
 | session_id | An authenticated session id | required if not using cookie |
 POST /delete_channel_entry
+> Content-Type: application/x-www-form-urlencoded
 entry_id=1&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
@@ -577,6 +586,7 @@ Create category
 | cat_order | The order of the new category | optional |
 | session_id | An authenticated session id | required if not using cookie |
 POST /create_category
+> Content-Type: application/x-www-form-urlencoded
 group_id=1&cat_url_title=new_category&cat_name=New Category&site_id=1&parent_id=0"&cat_description=New Category Description&cat_order=4&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
@@ -599,6 +609,7 @@ Update category
 | cat_order | The order of the category | optional |
 | session_id | An authenticated session id | required if not using cookie |
 POST /update_category
+> Content-Type: application/x-www-form-urlencoded
 cat_id=1&group_id=1&cat_url_title=new_category&cat_name=New Category&site_id=1&parent_id=0"&cat_description=New Category Description&cat_order=4&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
@@ -615,6 +626,7 @@ Delete category
 | cat_id | The id of the category to delete | required |
 | session_id | An authenticated session id | required if not using cookie |
 POST /delete_category
+> Content-Type: application/x-www-form-urlencoded
 cat_id=1&session_id=87b1bc8c82c40214d8682c9cbada3e91f2df6b98
 < 200
 < Content-Type: application/json
@@ -684,6 +696,7 @@ Create category group
 | Request parameters  |  |  |
 | :-------------  | ------------- | ------------- |
 POST /create_category_group
+> Content-Type: application/x-www-form-urlencoded
 < 200
 < Content-Type: application/json
 {
@@ -698,6 +711,7 @@ Update category group
 | :-------------  | ------------- | ------------- |
 | group_id | The id of the category group to update | required |
 POST /update_category_group
+> Content-Type: application/x-www-form-urlencoded
 group_id=1
 < 200
 < Content-Type: application/json
@@ -713,6 +727,7 @@ Delete category group
 | :-------------  | ------------- | ------------- |
 | group_id | The id of the category group to delete | required |
 POST /delete_category_group
+> Content-Type: application/x-www-form-urlencoded
 group_id=1
 < 200
 < Content-Type: application/json
