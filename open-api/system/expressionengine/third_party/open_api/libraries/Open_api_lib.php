@@ -252,7 +252,9 @@ class Open_api_lib
 	function get_channel_entry()
 	{
 		// get variables
-		$vars = $this->_get_vars('get', array('entry_id'));
+		$vars = $this->_get_vars('get', array('entry_id'), array(
+			'select' => array(),
+		));
 		
 		// start hook
 		$vars = $this->_hook('get_channel_entry_start', $vars);
@@ -260,7 +262,7 @@ class Open_api_lib
 		// load channel data library
 		$this->_load_library('channel_data');
 
-		$data = $this->EE->channel_data_lib->get_channel_entry($vars['entry_id'])->result();
+		$data = $this->EE->channel_data_lib->get_channel_entry($vars['entry_id'], $vars['select'])->result();
 		
 		// expand file fields
 		if (count($data)) 
