@@ -1,4 +1,4 @@
---- ExpressionEngine Open API v0.4.4 ---
+--- ExpressionEngine Open API v0.4.5 ---
 ---
 The Open API is an ExpressionEngine add-on that brings front-end CRUD capability to websites.
 ---

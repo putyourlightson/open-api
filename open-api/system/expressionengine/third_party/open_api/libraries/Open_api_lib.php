@@ -848,6 +848,13 @@ class Open_api_lib
 		// json encode response
 		$response = json_encode($data);
 
+		// if a callback was requested for jsonp
+		if ($callback = $this->EE->input->get_post('callback'))
+		{
+			// pad response with callback function
+			$response = $callback.'('.$response.')';
+		}
+		
 		// if is an error response
 		if ($response_code >= 400)
 		{
